@@ -8,14 +8,17 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @Entity
-@Table(name = "Universities")
+@Table(name = "Documents")
 @NonNull
 @AllArgsConstructor
-public class University {
+public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "uni_id")
-    private int id;
-    @Column(name = "uni_name")
-    private String name;
+    @Column(name = "doc_id")
+    private long id;
+    @Column(name = "doc_content")
+    private String content;
+    @ManyToOne
+    @Column(name = "grad_id")
+    private long graduate;
 }
