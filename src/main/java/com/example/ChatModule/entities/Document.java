@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "DOCUMENTS")
+@Table(name = "Documents")
 @NonNull
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +15,9 @@ public class Document {
     @Column(name = "doc_id")
     private Long id;
     @Column(name = "doc_content")
-    private String content;
+    @Lob
+    private byte[] content;
     @ManyToOne(optional = false)
+    @JoinColumn(name="grad_id")
     private Graduate graduate;
 }

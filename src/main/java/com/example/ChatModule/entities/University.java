@@ -2,12 +2,14 @@ package com.example.ChatModule.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Entity
-@Table(name = "UNIVERSITIES")
+@Table(name = "Universities")
 @NonNull
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class University {

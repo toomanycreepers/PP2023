@@ -1,13 +1,18 @@
 package com.example.ChatModule.DTOs;
 
-import com.example.ChatModule.entities.Faculty;
-import lombok.Getter;
-import lombok.Value;
+import com.example.ChatModule.entities.EduProgram;
+import lombok.*;
 
-import java.util.List;
 
-@Value
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EduProgramDTO {
     String id;
     String name;
+
+    public EduProgramDTO(EduProgram EP){
+        this.id=EP.getId();
+        this.name = EP.getName();
+    }
 }

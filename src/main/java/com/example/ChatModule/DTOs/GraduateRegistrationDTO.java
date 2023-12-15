@@ -1,17 +1,18 @@
 package com.example.ChatModule.DTOs;
 
+import com.example.ChatModule.entities.Graduate;
 import lombok.*;
 
-@Value
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @NonNull
 public class GraduateRegistrationDTO {
-    Long id;
     String mail;
     String firstname;
     String lastname;
     String patronimic;
-    String dateOfBirthday;
+    String dateOfBirth;
     String gradFrom;
     String region;
     String password;

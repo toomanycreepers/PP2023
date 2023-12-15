@@ -1,18 +1,61 @@
 server:
   port: 8080
 
+---
+
 spring:
+  config:
+    activate:
+      on-profile: dev
   security:
-    enabled: false
+    basic:
+      enabled: false
 
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=ChatModule;encrypt=false
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: sa
+    username: PPApp
     password: 12345
 
   jpa:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.SQLServer2012Dialect
-      ddl-auto: update
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+---
+
+spring:
+  profiles:
+    active:
+      dev

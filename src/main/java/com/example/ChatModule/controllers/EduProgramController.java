@@ -16,8 +16,7 @@ public class EduProgramController {
     @Autowired
     private EduProgramServiceImpl service;
     @PostMapping
-    @ResponseBody
-    public ResponseEntity<HttpStatus> EduProgram(@RequestBody EduProgramDTO dto){
+    public ResponseEntity<HttpStatus> AddProgram(@RequestBody EduProgramDTO dto){
         if(dto != null){
             service.createEduProgram(dto);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -27,14 +26,15 @@ public class EduProgramController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<List<EduProgramDTO>> EduProgram(){
+    public ResponseEntity<List<EduProgramDTO>> GetAllPrograms(){
         return new ResponseEntity<>(service.getAllEduPrograms(),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<HttpStatus> EduProgram(@PathVariable String id){
-        if(service.getEduProgram(id) != null) return new ResponseEntity<>(HttpStatus.FOUND);
+    public ResponseEntity<EduProgramDTO> GetProgramById(@PathVariable String id){
+        EduProgramDTO program = service.getEduProgram(id);
+        if(program != null) return new ResponseEntity<>(program, HttpStatus.FOUND);
             else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

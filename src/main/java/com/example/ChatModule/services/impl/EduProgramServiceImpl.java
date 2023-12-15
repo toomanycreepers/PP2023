@@ -26,25 +26,19 @@ public class EduProgramServiceImpl implements EduProgramService {
         var dtos = new ArrayList<EduProgramDTO>();
         for (int i=0;i<programs.toArray().length;i++){
             EduProgram program = programs.get(i);
-            dtos.add(new EduProgramDTO(program.getId(),program.getName()));
+            dtos.add(new EduProgramDTO(program));
         }
         return dtos;
     }
 
     public EduProgramDTO getEduProgram(String id){
         var foundEP = repository.findById(id).orElse(null);
-        if(foundEP != null) return new EduProgramDTO(
-                foundEP.getId(),
-                foundEP.getName()
-        );
+        if(foundEP != null) return new EduProgramDTO(foundEP);
         else return null;
     }
     public EduProgramDTO getEduProgramByName(String name){
         var foundEP = repository.findByName(name).orElse(null);
-        if(foundEP != null) return new EduProgramDTO(
-                foundEP.getId(),
-                foundEP.getName()
-        );
+        if(foundEP != null) return new EduProgramDTO(foundEP);
         else return null;
     }
 

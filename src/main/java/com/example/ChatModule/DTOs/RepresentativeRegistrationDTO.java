@@ -1,16 +1,20 @@
 package com.example.ChatModule.DTOs;
 
+import com.example.ChatModule.entities.Representative;
 import lombok.*;
 
-@Value
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @NonNull
 public class RepresentativeRegistrationDTO {
-    int id;
     String firstname;
     String lastname;
     String patronimic;
-    int university;
+    /**
+     * TODO: Представители не знают id своего вуза. Сделать выбор по имени?
+     */
+    int uniId;
     String login;
     String password;
 }
