@@ -11,10 +11,7 @@ public class RepresentativeRegistrationDTO {
     String firstname;
     String lastname;
     String patronimic;
-    /**
-     * TODO: Представители не знают id своего вуза. Сделать выбор по имени?
-     */
-    int uniId;
+    String uniName;
     String login;
     String password;
 }

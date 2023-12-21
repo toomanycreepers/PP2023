@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {
-    List<Faculty> findByName(String name);
+    List<Faculty> findAllByName(String name);
+    List<Faculty> findAllByUniversityId(int universityId);
 }

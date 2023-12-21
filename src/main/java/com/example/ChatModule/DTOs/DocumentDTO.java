@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DocumentDTO {
-    Long id;
-    byte[] content;
+    private byte[] content;
+    private String name;
     private Long graduateId;
 
     public DocumentDTO(Document doc){
-        this.id = doc.getId();
         this.content = doc.getContent();
+        this.name= doc.getName();
         this.graduateId = doc.getGraduate().getId();
     }
 }

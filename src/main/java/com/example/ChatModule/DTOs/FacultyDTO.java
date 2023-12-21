@@ -13,13 +13,13 @@ import java.util.List;
 @NonNull
 public class FacultyDTO {
     long id;
+    String name;
     int uniId;
     List<EduProgramDTO> EPs;
 
-    FacultyDTO(Faculty faculty){
+    public FacultyDTO(Faculty faculty){
         this.id=faculty.getId();
         this.uniId=faculty.getUniversity().getId();
-
         var facultyEPs = faculty.getEduPrograms();
         var dtos = new ArrayList<EduProgramDTO>();
         for (int i=0;i<facultyEPs.toArray().length;i++){

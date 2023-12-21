@@ -1,4 +1,4 @@
-package com.example.ChatModule.services.impl;
+package com.example.ChatModule.services;
 
 import com.example.ChatModule.DTOs.GraduateAuthDTO;
 import com.example.ChatModule.DTOs.GraduateRegistrationDTO;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class GraduateServiceImpl {
+public class GraduateService {
     @Autowired
     private GraduateRepository repo;
 
@@ -36,5 +36,9 @@ public class GraduateServiceImpl {
     public boolean mailPresent(String mail){
         Graduate grad = repo.findByMail(mail).orElse(null);
         return grad!=null;
+    }
+
+    public void killGrad(long id){
+        if (repo.existsById(id)) repo.deleteById(id);
     }
 }

@@ -5,9 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.Base64;
 
 /**
  * Класс, представляющий абитуриента.

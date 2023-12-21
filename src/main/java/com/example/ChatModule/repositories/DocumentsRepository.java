@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DocumentsRepository extends JpaRepository<Document, Long> {
+    List<Document> findAllByGraduateId(long graduateId);
 }
