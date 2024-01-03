@@ -3,6 +3,7 @@ package com.example.ChatModule.controllers;
 import com.example.ChatModule.DTOs.FacultyEPDTO;
 import com.example.ChatModule.DTOs.UniversityCreationDTO;
 import com.example.ChatModule.services.UniversityService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UniversityController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addUniversity(@RequestBody UniversityCreationDTO dto){
+    public ResponseEntity<HttpStatus> addUniversity(@Valid @RequestBody UniversityCreationDTO dto){
         if(service.addUniversity(dto)){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

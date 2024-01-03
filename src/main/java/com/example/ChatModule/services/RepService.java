@@ -7,6 +7,7 @@ import com.example.ChatModule.entities.Representative;
 import com.example.ChatModule.repositories.EduProgramRepository;
 import com.example.ChatModule.repositories.RepresentativeRepository;
 import com.example.ChatModule.repositories.UniversityRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class RepService {
     @Autowired
     private EduProgramRepository epRepo;
 
-    public boolean registerRep(RepresentativeRegistrationDTO dto){
+    public boolean registerRep(@Valid RepresentativeRegistrationDTO dto){
         var uniOpt = uniRepo.findByName(dto.getUniName());
         if (uniOpt.isEmpty()||loginPresent(dto.getLogin())) return false;
         var rep = new Representative();
@@ -41,7 +42,7 @@ public class RepService {
         return exists;
     }
 
-    public boolean authenticateRep(RepresentativeAuthDTO dto){
+    public boolean authenticateRep(@Valid RepresentativeAuthDTO dto){
         Representative rep = repo.findByLogin(dto.getLogin()).orElse(null);
         return(rep!=null&&rep.getPassword().equals(BCrypt.hashpw(dto.getPassword(),rep.getSalt())));
     }

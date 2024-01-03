@@ -1,6 +1,7 @@
 package com.example.ChatModule.DTOs;
 
 import com.example.ChatModule.entities.Graduate;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -8,13 +9,23 @@ import lombok.*;
 @NoArgsConstructor
 @NonNull
 public class GraduateDTO {
+    @NotNull
+    @Min(1)
     long id;
+    @NotBlank
+    @Email
     String mail;
+    @NotBlank
     String firstname;
+    @NotBlank
     String lastname;
     String patronimic;
+    @NotBlank
+    @Pattern(regexp = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
     String dateOfBirth;
+    @NotBlank
     String gradFrom;
+    @NotBlank
     String region;
 
     public GraduateDTO(Graduate grad){

@@ -2,6 +2,7 @@ package com.example.ChatModule.controllers;
 
 import com.example.ChatModule.DTOs.EduProgramDTO;
 import com.example.ChatModule.services.EduProgramService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class EduProgramController {
     @Autowired
     private EduProgramService service;
     @PostMapping
-    public ResponseEntity<HttpStatus> addProgram(@RequestBody EduProgramDTO dto){
+    public ResponseEntity<HttpStatus> addProgram(@Valid @RequestBody EduProgramDTO dto){
         if(service.createEduProgram(dto)){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
@@ -45,7 +46,7 @@ public class EduProgramController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @PutMapping
-    public ResponseEntity<HttpStatus> updateProgram(@RequestBody EduProgramDTO dto){
+    public ResponseEntity<HttpStatus> updateProgram(@Valid @RequestBody EduProgramDTO dto){
         if(service.updateEduProgram(dto)){
             return new ResponseEntity<>(HttpStatus.OK);
         }

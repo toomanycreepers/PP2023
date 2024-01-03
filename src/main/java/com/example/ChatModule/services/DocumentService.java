@@ -4,6 +4,7 @@ import com.example.ChatModule.DTOs.DocumentDTO;
 import com.example.ChatModule.entities.Document;
 import com.example.ChatModule.repositories.DocumentsRepository;
 import com.example.ChatModule.repositories.GraduateRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class DocumentService {
     private DocumentsRepository repo;
     @Autowired
     private GraduateRepository gradrepo;
-    public void createDocument(DocumentDTO dto){
+    public void createDocument(@Valid DocumentDTO dto){
         Document doc = new Document();
         doc.setContent(dto.getContent());
         doc.setName(dto.getName());

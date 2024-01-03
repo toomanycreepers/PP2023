@@ -9,6 +9,7 @@ import com.example.ChatModule.entities.Faculty;
 import com.example.ChatModule.repositories.EduProgramRepository;
 import com.example.ChatModule.repositories.FacultyRepository;
 import com.example.ChatModule.repositories.UniversityRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class FacultyService {
         return new FacultyDTO(fac);
     }
 
-    public boolean createFaculty(FacultyCreationDTO dto){
+    public boolean createFaculty(@Valid FacultyCreationDTO dto){
         var uniOpt = uniRepo.findById(dto.getUniId());
         if (uniOpt.isEmpty()) return false;
         Faculty faculty = new Faculty();

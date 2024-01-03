@@ -6,6 +6,7 @@ import com.example.ChatModule.entities.Faculty;
 import com.example.ChatModule.entities.University;
 import com.example.ChatModule.repositories.FacultyRepository;
 import com.example.ChatModule.repositories.UniversityRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class UniversityService {
     @Autowired
     private FacultyService facService;
 
-    public boolean addUniversity(UniversityCreationDTO dto){
+    public boolean addUniversity(@Valid UniversityCreationDTO dto){
         boolean exists = repo.existsByName(dto.getName());
         if (!exists) repo.save(new University(null,dto.getName()));
         return !exists;

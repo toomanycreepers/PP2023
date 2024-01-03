@@ -4,6 +4,7 @@ import com.example.ChatModule.DTOs.EduProgramDTO;
 import com.example.ChatModule.DTOs.FacultyCreationDTO;
 import com.example.ChatModule.DTOs.FacultyDTO;
 import com.example.ChatModule.services.FacultyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class FacultyController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> createFaculty(@RequestBody FacultyCreationDTO dto){
+    public ResponseEntity<HttpStatus> createFaculty(@Valid @RequestBody FacultyCreationDTO dto){
         if(service.createFaculty(dto)){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
@@ -34,7 +35,7 @@ public class FacultyController {
     }
 
     @PostMapping("/{id}/programs")
-    public ResponseEntity<HttpStatus> addEP(@PathVariable long id, @RequestBody EduProgramDTO dto){
+    public ResponseEntity<HttpStatus> addEP(@PathVariable long id, @Valid @RequestBody EduProgramDTO dto){
         if(service.addEP(id,dto.getId())){
             return new ResponseEntity<>(HttpStatus.OK);
         }
