@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class DocumentService {
     @Autowired
@@ -20,12 +21,14 @@ public class DocumentService {
         Document doc = new Document();
         doc.setContent(dto.getContent());
         doc.setName(dto.getName());
-        doc.setGraduate(gradrepo.findById(dto.getGraduateId()).get());
+        doc.setGraduate(gradrepo.findById(dto.getGraduateId()).orElse(null));
         repo.save(doc);
     }
 
-    public void deleteDocument(long id){
+    public boolean deleteDocument(long id){
+        boolean exists = repo.existsById(id);
         repo.deleteById(id);
+        return exists;
     }
 
     public DocumentDTO getDocument(long id){

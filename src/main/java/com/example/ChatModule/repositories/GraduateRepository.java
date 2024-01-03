@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface GraduateRepository extends JpaRepository<Graduate, Long> {
     Optional<Graduate> findByMail(String mail);
     List<Graduate> findByRegion(String region);
+    boolean existsByMail(String mail);
 }

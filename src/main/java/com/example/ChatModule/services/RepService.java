@@ -2,6 +2,7 @@ package com.example.ChatModule.services;
 
 import com.example.ChatModule.DTOs.RepresentativeAuthDTO;
 import com.example.ChatModule.DTOs.RepresentativeRegistrationDTO;
+import com.example.ChatModule.entities.Faculty;
 import com.example.ChatModule.entities.Representative;
 import com.example.ChatModule.repositories.EduProgramRepository;
 import com.example.ChatModule.repositories.RepresentativeRepository;
@@ -20,19 +21,24 @@ public class RepService {
     @Autowired
     private EduProgramRepository epRepo;
 
-    public void registerRep(RepresentativeRegistrationDTO dto){
+    public boolean registerRep(RepresentativeRegistrationDTO dto){
+        var uniOpt = uniRepo.findByName(dto.getUniName());
+        if (uniOpt.isEmpty()||loginPresent(dto.getLogin())) return false;
         var rep = new Representative();
         rep.setLogin(dto.getLogin());
         rep.setFirstname(dto.getFirstname());
         rep.setLastname(dto.getLastname());
         rep.setPatronimic(dto.getPatronimic());
         rep.setPassword(dto.getPassword());
-        rep.setUniversity(uniRepo.findByName(dto.getUniName()).get());
+        rep.setUniversity(uniOpt.get());
         repo.save(rep);
+        return loginPresent(dto.getLogin());
     }
 
-    public void killRep(int repId){
-        if (repo.existsById(repId)) repo.deleteById(repId);
+    public boolean killRep(int repId){
+        boolean exists = repo.existsById(repId);
+        repo.deleteById(repId);
+        return exists;
     }
 
     public boolean authenticateRep(RepresentativeAuthDTO dto){
@@ -44,18 +50,26 @@ public class RepService {
         Representative rep = repo.findByLogin(login).orElse(null);
         return rep!=null;
     }
-    public void addEP(String repLogin, String EPId) {
+
+    public boolean addEP(String repLogin, String EPId) {
+
         Representative rep = repo.findByLogin(repLogin).orElse(null);
-        if (rep==null) return;
-        rep.addEP(epRepo.findById(EPId).get());
+        if (rep==null) return false;
+        var epOpt = epRepo.findById(EPId);
+        if (epOpt.isEmpty()) return false;
+        rep.addEP(epOpt.get());
         repo.save(rep);
+        return true;
     }
 
-    public void removeEP(String repLogin, String EPId){
+    public boolean removeEP(String repLogin, String EPId){
         Representative rep = repo.findByLogin(repLogin).orElse(null);
-        if (rep==null) return;
-        rep.removeEP(epRepo.findById(EPId).get());
+        if (rep==null) return false;
+        var epOpt = epRepo.findById(EPId);
+        if (epOpt.isEmpty()) return false;
+        rep.removeEP(epOpt.get());
         repo.save(rep);
+        return true;
     }
 
 }

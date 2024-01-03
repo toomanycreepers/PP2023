@@ -15,7 +15,9 @@ public class GraduateService {
     @Autowired
     private GraduateRepository repo;
 
-    public void registerGraduate(GraduateRegistrationDTO dto){
+    public boolean registerGraduate(GraduateRegistrationDTO dto){
+        boolean mailPresent = mailPresent(dto.getMail());
+        if (mailPresent) return false;
         var grad = new Graduate();
         grad.setMail(dto.getMail());
         grad.setPassword(dto.getPassword());
@@ -26,6 +28,7 @@ public class GraduateService {
         grad.setGradFrom(dto.getGradFrom());
         grad.setRegion(dto.getRegion());
         repo.save(grad);
+        return mailPresent(dto.getMail());
     }
 
     public boolean authenticateGrad(GraduateAuthDTO dto){
@@ -34,11 +37,12 @@ public class GraduateService {
     }
 
     public boolean mailPresent(String mail){
-        Graduate grad = repo.findByMail(mail).orElse(null);
-        return grad!=null;
+        return repo.existsByMail(mail);
     }
 
-    public void killGrad(long id){
-        if (repo.existsById(id)) repo.deleteById(id);
+    public boolean killGrad(long id){
+        boolean exists = repo.existsById(id);
+        repo.deleteById(id);
+        return exists;
     }
 }

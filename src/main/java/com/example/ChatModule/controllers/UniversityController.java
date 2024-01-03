@@ -23,13 +23,17 @@ public class UniversityController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> addUniversity(@RequestBody UniversityCreationDTO dto){
-        service.addUniversity(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        if(service.addUniversity(dto)){
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{uniId}")
     public ResponseEntity<HttpStatus> removeUniversity(@PathVariable int uniId){
-        service.removeUniversity(uniId);
-        return  new ResponseEntity<>(HttpStatus.OK);
+        if(service.removeUniversity(uniId)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

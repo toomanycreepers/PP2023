@@ -13,11 +13,13 @@ import java.util.List;
 public class EduProgramService {
     @Autowired
     private EduProgramRepository repository;
-    public void createEduProgram(EduProgramDTO dto){
+
+    public boolean createEduProgram(EduProgramDTO dto){
         repository.save(new EduProgram(
                 dto.getId(),
                 dto.getName()
         ));
+        return repository.existsById(dto.getId());
     }
 
     public List<EduProgramDTO> getAllEduPrograms(){
@@ -41,13 +43,22 @@ public class EduProgramService {
         else return null;
     }
 
-    public void updateEduProgram(EduProgramDTO dto){
+    public boolean updateEduProgram(EduProgramDTO dto){
         var EPToUpdate = repository.findById(dto.getId()).orElse(null);
+
+        if (EPToUpdate!=null){
         EPToUpdate.setId(dto.getId());
         EPToUpdate.setName(dto.getName());
         repository.save(EPToUpdate);
+        return true;
+        }
+
+        return false;
     }
-    public void deleteEduProgram(String id){
-        if (repository.existsById(id)) repository.deleteById(id);
+
+    public boolean deleteEduProgram(String id){
+        boolean exists = repository.existsById(id);
+        repository.deleteById(id);
+        return exists;
     }
 }

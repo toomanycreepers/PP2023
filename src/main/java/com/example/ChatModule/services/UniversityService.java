@@ -21,12 +21,16 @@ public class UniversityService {
     @Autowired
     private FacultyService facService;
 
-    public void addUniversity(UniversityCreationDTO dto){
-        if (!repo.existsByName(dto.getName())) repo.save(new University(null,dto.getName()));
+    public boolean addUniversity(UniversityCreationDTO dto){
+        boolean exists = repo.existsByName(dto.getName());
+        if (!exists) repo.save(new University(null,dto.getName()));
+        return !exists;
     }
 
-    public void removeUniversity(int id){
-        if (repo.existsById(id)) repo.deleteById(id);
+    public boolean removeUniversity(int id){
+        boolean exists = repo.existsById(id);
+        repo.deleteById(id);
+        return exists;
     }
 
     public List<FacultyEPDTO> getUniversityEPs(int uniId){

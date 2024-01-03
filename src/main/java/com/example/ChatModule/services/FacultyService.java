@@ -30,25 +30,34 @@ public class FacultyService {
         return new FacultyDTO(fac);
     }
 
-    public void createFaculty(FacultyCreationDTO dto){
+    public boolean createFaculty(FacultyCreationDTO dto){
+        var uniOpt = uniRepo.findById(dto.getUniId());
+        if (uniOpt.isEmpty()) return false;
         Faculty faculty = new Faculty();
         faculty.setName(dto.getName());
-        faculty.setUniversity(uniRepo.findById(dto.getUniId()).get());
+        faculty.setUniversity(uniOpt.get());
         repo.save(faculty);
+        return true;
     }
 
-    public void addEP(long facultyId, String EPId) {
+    public boolean addEP(long facultyId, String EPId) {
         Faculty faculty = repo.findById(facultyId).orElse(null);
-        if (faculty==null) return;
-        faculty.addEP(epRepo.findById(EPId).get());
+        if (faculty==null) return false;
+        var epopt = epRepo.findById(EPId);
+        if (epopt.isEmpty()) return false;
+        faculty.addEP(epopt.get());
         repo.save(faculty);
+        return true;
     }
 
-    public void removeEP(long facultyId, String EPId){
+    public boolean removeEP(long facultyId, String EPId){
         Faculty faculty = repo.findById(facultyId).orElse(null);
-        if (faculty==null) return;
-        faculty.removeEP(epRepo.findById(EPId).get());
+        if (faculty == null) return false;
+        var epopt = epRepo.findById(EPId);
+        if (epopt.isEmpty()) return false;
+        faculty.removeEP(epopt.get());
         repo.save(faculty);
+        return true;
     }
 
     public FacultyEPDTO findAllEduPrograms(long facultyId){
@@ -62,7 +71,9 @@ public class FacultyService {
         return new FacultyEPDTO(faculty.getName(),epdtos);
     }
 
-    public void removeFaculty(long facultyId){
-        if (repo.existsById(facultyId)) repo.deleteById(facultyId);
+    public boolean removeFaculty(long facultyId){
+        boolean exists = repo.existsById(facultyId);
+        repo.deleteById(facultyId);
+        return exists;
     }
 }

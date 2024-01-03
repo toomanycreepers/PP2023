@@ -42,11 +42,10 @@ public class DocumentController {
 
     @DeleteMapping("/{docId}")
     public ResponseEntity<HttpStatus> removeFile(@PathVariable Long docId){
-        if(service.getDocument(docId)!=null) {
-            service.deleteDocument(docId);
+        if(service.deleteDocument(docId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
