@@ -37,7 +37,7 @@ public class RepService {
 
     public boolean authenticateRep(RepresentativeAuthDTO dto){
         Representative rep = repo.findByLogin(dto.getLogin()).orElse(null);
-        return(rep!=null&&rep.getPassword().equals(BCrypt.hashpw(dto.getPassword(),rep.getSalt())));
+        return( rep != null && rep.getPassword().equals(BCrypt.hashpw(dto.getPassword(),rep.getSalt())));
     }
 
     public boolean loginPresent(String login){

@@ -1,5 +1,6 @@
 package com.example.ChatModule.entities;
 
+import com.example.ChatModule.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,6 +50,7 @@ public class Graduate {
     private String region;
     @Column(name="salt")
     private String salt;
+    private Role role;
 
     private void generateSalt(){
         if (this.salt==null)
