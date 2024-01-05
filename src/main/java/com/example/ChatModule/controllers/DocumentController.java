@@ -15,7 +15,7 @@ public class DocumentController {
     @Autowired
     DocumentService service;
     @GetMapping(value = "/{docId}",produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getFileById(@PathVariable Long docId){
+    public ResponseEntity<byte[]> getFileById(@PathVariable long docId){
         DocumentDTO doc = service.getDocument(docId);
 
         if (doc==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -28,7 +28,7 @@ public class DocumentController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<HttpStatus> addFile(@RequestPart("content")MultipartFile file,
                         @RequestParam("name") String name,
-                        @RequestParam("graduateId") Long graduateId){
+                        @RequestParam("graduateId") long graduateId){
         try {
             byte[] content = file.getBytes();
             DocumentDTO dto = new DocumentDTO(content,name,graduateId);
@@ -41,12 +41,11 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{docId}")
-    public ResponseEntity<HttpStatus> removeFile(@PathVariable Long docId){
-        if(service.getDocument(docId)!=null) {
-            service.deleteDocument(docId);
+    public ResponseEntity<HttpStatus> removeFile(@PathVariable long docId){
+        if(service.deleteDocument(docId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 

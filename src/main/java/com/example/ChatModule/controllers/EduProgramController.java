@@ -2,6 +2,7 @@ package com.example.ChatModule.controllers;
 
 import com.example.ChatModule.DTOs.EduProgramDTO;
 import com.example.ChatModule.services.EduProgramService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,11 @@ public class EduProgramController {
     @Autowired
     private EduProgramService service;
     @PostMapping
-    public ResponseEntity<HttpStatus> addProgram(@RequestBody EduProgramDTO dto){
-        if(dto != null){
-            service.createEduProgram(dto);
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<HttpStatus> addProgram(@Valid @RequestBody EduProgramDTO dto){
+        if(service.createEduProgram(dto)){
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
-        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping
@@ -33,17 +33,23 @@ public class EduProgramController {
     @ResponseBody
     public ResponseEntity<EduProgramDTO> getProgramById(@PathVariable String id){
         EduProgramDTO program = service.getEduProgram(id);
-        if(program != null) return new ResponseEntity<>(program, HttpStatus.FOUND);
-            else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(program != null) {
+            return new ResponseEntity<>(program, HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProgram(@PathVariable String id){
-        service.deleteEduProgram(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(service.deleteEduProgram(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @PutMapping
-    public ResponseEntity<HttpStatus> updateProgram(@RequestBody EduProgramDTO dto){
-        service.updateEduProgram(dto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<HttpStatus> updateProgram(@Valid @RequestBody EduProgramDTO dto){
+        if(service.updateEduProgram(dto)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

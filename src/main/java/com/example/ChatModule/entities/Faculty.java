@@ -25,7 +25,7 @@ public class Faculty {
     private University university;
     @ManyToMany
     @JoinTable(name="FacultyEP",joinColumns = @JoinColumn(name="faculty_id"),inverseJoinColumns = @JoinColumn(name="ep_id"))
-    private ArrayList<EduProgram> eduPrograms;
+    private List<EduProgram> eduPrograms;
 
     public Faculty(){
         this.id = null;

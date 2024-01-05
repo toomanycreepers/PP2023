@@ -1,14 +1,13 @@
 package com.example.ChatModule.DTOs;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class UniversityCreationDTO {
-    @NotBlank
-    private String name;
+@AllArgsConstructor
+public class JwtResponse {
+    private String token;
 }

@@ -1,10 +1,14 @@
 package com.example.ChatModule.entities;
 
+import com.example.ChatModule.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Representatives")
@@ -37,9 +41,10 @@ public class Representative {
     private University university;
     @ManyToMany
     @JoinTable(name="RepresentativeEP",joinColumns = @JoinColumn(name="rep_id"),inverseJoinColumns = @JoinColumn(name="ep_id"))
-    private ArrayList<EduProgram> eduPrograms;
+    private List<EduProgram> eduPrograms;
     @Column(name="salt")
     private String salt;
+    private Set<GrantedAuthority> roles;
 
     private void generateSalt(){
         if (this.salt==null)
@@ -49,6 +54,10 @@ public class Representative {
         generateSalt();
         password=BCrypt.hashpw(password,salt);
         this.password=password;
+    }
+
+    public void setRoles(){
+        roles.add(Role.REPRESENTATIVE);
     }
 
     public void addEP(EduProgram ep){

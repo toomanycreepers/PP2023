@@ -4,9 +4,11 @@ import com.example.ChatModule.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Класс, представляющий абитуриента.
@@ -41,6 +43,7 @@ public class Graduate {
     private LocalDate dateOfBirth;
     @Column(name = "photo")
     @Lob
+    @Setter
     private byte[] photo;
     @Setter
     @Column(name = "graduated_from")
@@ -50,7 +53,7 @@ public class Graduate {
     private String region;
     @Column(name="salt")
     private String salt;
-    private Role role;
+    private Set<GrantedAuthority> roles;
 
     private void generateSalt(){
         if (this.salt==null)
@@ -60,5 +63,9 @@ public class Graduate {
         generateSalt();
         password=BCrypt.hashpw(password,salt);
         this.password=password;
+    }
+
+    public void setRoles(){
+        roles.add(Role.GRADUATE);
     }
 }

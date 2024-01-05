@@ -14,7 +14,7 @@ spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=ChatModule;encrypt=false
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: PPApp
+    username: sa
     password: 12345
 
   jpa:
@@ -59,3 +59,7 @@ spring:
   profiles:
     active:
       dev
+
+jwt:
+  secret: 984hg493gh0439rthr0429uruj2309yh937gc763fe87t3f89723gf
+  lifetime: 1h
