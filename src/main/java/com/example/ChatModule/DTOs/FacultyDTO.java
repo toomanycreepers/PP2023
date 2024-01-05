@@ -29,6 +29,7 @@ public class FacultyDTO {
     public FacultyDTO(Faculty faculty){
         this.id=faculty.getId();
         this.uniId=faculty.getUniversity().getId();
+        this.name= faculty.getName();
         var facultyEPs = faculty.getEduPrograms();
         var dtos = new ArrayList<EduProgramDTO>();
         for (int i=0;i<facultyEPs.toArray().length;i++){

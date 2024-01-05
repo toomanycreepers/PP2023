@@ -49,4 +49,26 @@ public class GraduateService {
         repo.deleteById(id);
         return exists;
     }
+
+    public boolean uploadImage(long gradId, byte[] image){
+        Graduate graduate = repo.findById(gradId).orElse(null);
+        if (graduate==null) return false;
+        graduate.setPhoto(image);
+        return true;
+    }
+
+    public boolean deleteImage(long gradId){
+        Graduate grad = repo.findById(gradId).orElse(null);
+        if (grad==null) return false;
+        if (grad.getPhoto()==null||grad.getPhoto().length<=1) return false;
+        grad.setPhoto(null);
+        repo.save(grad);
+        return true;
+    }
+
+    public byte[] getGradImage(long gradId){
+        Graduate grad = repo.findById(gradId).orElse(null);
+        if (grad==null) return null;
+        return grad.getPhoto();
+    }
 }

@@ -40,6 +40,7 @@ public class Graduate {
     private LocalDate dateOfBirth;
     @Column(name = "photo")
     @Lob
+    @Setter
     private byte[] photo;
     @Setter
     @Column(name = "graduated_from")

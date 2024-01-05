@@ -17,7 +17,7 @@ public class UniversityController {
     @Autowired
     UniversityService service;
 
-    @GetMapping("/{id}/programs")
+    @GetMapping("/{uniId}/programs")
     public ResponseEntity<List<FacultyEPDTO>> getUniversityPrograms(@PathVariable int uniId){
         return new ResponseEntity<>(service.getUniversityEPs(uniId), HttpStatus.OK);
     }

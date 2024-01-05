@@ -16,6 +16,9 @@ public class EduProgramService {
     private EduProgramRepository repository;
 
     public boolean createEduProgram(@Valid EduProgramDTO dto){
+        if (repository.existsById(dto.getId())) {
+            return false;
+        }
         repository.save(new EduProgram(
                 dto.getId(),
                 dto.getName()

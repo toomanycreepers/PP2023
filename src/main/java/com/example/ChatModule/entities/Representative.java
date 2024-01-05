@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Representatives")
@@ -37,7 +38,7 @@ public class Representative {
     private University university;
     @ManyToMany
     @JoinTable(name="RepresentativeEP",joinColumns = @JoinColumn(name="rep_id"),inverseJoinColumns = @JoinColumn(name="ep_id"))
-    private ArrayList<EduProgram> eduPrograms;
+    private List<EduProgram> eduPrograms;
     @Column(name="salt")
     private String salt;
 
