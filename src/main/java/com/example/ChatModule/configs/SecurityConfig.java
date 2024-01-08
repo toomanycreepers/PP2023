@@ -1,6 +1,5 @@
 package com.example.ChatModule.configs;
 
-import com.example.ChatModule.security.Role;
 import com.example.ChatModule.security.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +11,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,14 +25,25 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
     @Bean
-    public SecurityFilterChain requests(HttpSecurity http) throws Exception{// абсолютно недоделана
-        http.authorizeHttpRequests((authorize) ->authorize
-                .requestMatchers("/grad").hasRole(Role.GRADUATE.toString())//скорее всего не прочитает
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .anyRequest().authenticated())
-                .csrf((csrf) ->csrf.disable())
-                //вот тут еще будет JwtReqestFilter стоять на все запросы требующие аутентификацию
-                ;
+    public SecurityFilterChain filterchian(HttpSecurity http) throws Exception{
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
+                .authorizeRequests(authorize -> authorize
+                        .requestMatchers("/register").anonymous()
+                        .requestMatchers("/auth").anonymous()
+                        .requestMatchers("/grad").authenticated()
+                        .requestMatchers("/rep").authenticated()
+                        .requestMatchers("/doc").authenticated()
+                        .requestMatchers("/EP").authenticated()
+                        .requestMatchers("/faculty/**").authenticated()
+                        .requestMatchers("/university").anonymous()
+                        .anyRequest().permitAll()
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint((new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -32,7 +32,6 @@ public class RepService {
         rep.setPatronimic(dto.getPatronimic());
         rep.setPassword(dto.getPassword());
         rep.setUniversity(uniOpt.get());
-        rep.setRoles();
         repo.save(rep);
         return loginPresent(dto.getLogin());
     }

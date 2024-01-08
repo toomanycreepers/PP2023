@@ -4,6 +4,8 @@ import com.example.ChatModule.DTOs.FacultyEPDTO;
 import com.example.ChatModule.DTOs.UniversityCreationDTO;
 import com.example.ChatModule.services.UniversityService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,8 @@ import java.util.List;
 @RequestMapping("/university")
 public class UniversityController {
     @Autowired
-    UniversityService service;
+    private UniversityService service;
+    private static final Logger logger = LoggerFactory.getLogger(UniversityController.class);
 
     @GetMapping("/{uniId}/programs")
     public ResponseEntity<List<FacultyEPDTO>> getUniversityPrograms(@PathVariable int uniId){
@@ -25,16 +28,20 @@ public class UniversityController {
     @PostMapping
     public ResponseEntity<HttpStatus> addUniversity(@Valid @RequestBody UniversityCreationDTO dto){
         if(service.addUniversity(dto)){
+            logger.info("Добавлен университет {}.", dto.getName());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
+        logger.info("Ошибка добавления университета.");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/{uniId}")
     public ResponseEntity<HttpStatus> removeUniversity(@PathVariable int uniId){
         if(service.removeUniversity(uniId)) {
+            logger.info("Удалён университет {}.", uniId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
+        logger.error("Ошибка удаления университета {}.", uniId);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

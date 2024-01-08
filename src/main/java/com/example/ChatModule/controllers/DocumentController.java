@@ -2,6 +2,8 @@ package com.example.ChatModule.controllers;
 
 import com.example.ChatModule.DTOs.DocumentDTO;
 import com.example.ChatModule.services.DocumentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,10 @@ import java.io.IOException;
 @RequestMapping("/doc")
 public class DocumentController {
     @Autowired
-    DocumentService service;
+    private DocumentService service;
+
+    private static final Logger logger = LoggerFactory.getLogger(DocumentController.class);
+
     @GetMapping(value = "/{docId}",produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getFileById(@PathVariable long docId){
         DocumentDTO doc = service.getDocument(docId);
@@ -33,9 +38,11 @@ public class DocumentController {
             byte[] content = file.getBytes();
             DocumentDTO dto = new DocumentDTO(content,name,graduateId);
             service.createDocument(dto);
+            logger.info("Абитуриент {} добавил документ: {}.", graduateId, name);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (IOException e){
+            logger.error("Ошибка добавления документа абитуриентом {}.", graduateId);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -43,10 +50,10 @@ public class DocumentController {
     @DeleteMapping("/{docId}")
     public ResponseEntity<HttpStatus> removeFile(@PathVariable long docId){
         if(service.deleteDocument(docId)){
+            logger.info("Удалён документ {}.", docId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
+        logger.error("Ошибка удаления документа {}.", docId);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-
 }

@@ -24,26 +24,24 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private RepresentativeRepository repRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String mail){
-        Graduate grad = gradRepo.findByMail(mail).orElse(null);
-        if(grad == null) throw new UsernameNotFoundException("User with" + mail + " mail not found");
+    public UserDetails loadUserByUsername(String username){
+        if(username.contains("@")){
+            Graduate grad = gradRepo.findByMail(username).orElse(null);
+            if(grad == null) throw new UsernameNotFoundException("User with" + username + " mail not found");
 
-        return new org.springframework.security.core.userdetails.User(
-                grad.getMail(),
-                grad.getPassword(),
-                grad.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList())
-        );
-
-
-    }
-    public UserDetails loadRepresentativeByLogin(String login){
-        Representative rep = repRepo.findByLogin(login).orElse(null);
-        if(rep == null) throw new UsernameNotFoundException("User with" + login + " login not found");
+            return new org.springframework.security.core.userdetails.User(
+                    grad.getMail(),
+                    grad.getPassword(),
+                    grad.getRoles()
+            );
+        }
+        Representative rep = repRepo.findByLogin(username).orElse(null);
+        if(rep == null) throw new UsernameNotFoundException("User with" + username + " login not found");
 
         return new org.springframework.security.core.userdetails.User(
                 rep.getLogin(),
                 rep.getPassword(),
-                rep.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList())
+                rep.getRoles()
         );
     }
 }

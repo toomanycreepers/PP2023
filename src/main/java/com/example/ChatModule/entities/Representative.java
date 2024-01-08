@@ -1,6 +1,5 @@
 package com.example.ChatModule.entities;
 
-import com.example.ChatModule.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,7 +43,8 @@ public class Representative {
     private List<EduProgram> eduPrograms;
     @Column(name="salt")
     private String salt;
-    private Set<GrantedAuthority> roles;
+    @Transient
+    private List<Role> role = new ArrayList<Role>();
 
     private void generateSalt(){
         if (this.salt==null)
@@ -56,8 +56,9 @@ public class Representative {
         this.password=password;
     }
 
-    public void setRoles(){
-        roles.add(Role.REPRESENTATIVE);
+    public List<Role> getRoles(){
+        role.add(new Role("ROLE_REP")) ;
+        return role;
     }
 
     public void addEP(EduProgram ep){

@@ -44,13 +44,14 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/auth/rep")
+    public ResponseEntity<?> createRepAuthToken(@RequestBody RepresentativeAuthDTO dto) {
+        return authService.createRepAuthToken(dto);
+    }
     @PostMapping("/auth/grad")
     public ResponseEntity<?> createGradAuthToken(@RequestBody GraduateAuthDTO dto) {
         return authService.createGradAuthToken(dto);
     }
 
-    @PostMapping("/auth/rep")
-    public ResponseEntity<?> createRepAuthToken(@RequestBody RepresentativeAuthDTO dto) {
-        return authService.createRepAuthToken(dto);
-    }
+
 }
