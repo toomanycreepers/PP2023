@@ -9,6 +9,7 @@ import com.example.ChatModule.repositories.RepresentativeRepository;
 import com.example.ChatModule.repositories.UniversityRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class RepService {
     private UniversityRepository uniRepo;
     @Autowired
     private EduProgramRepository epRepo;
+
 
     public boolean registerRep(@Valid RepresentativeRegistrationDTO dto){
         var uniOpt = uniRepo.findByName(dto.getUniName());
@@ -36,22 +38,19 @@ public class RepService {
         return loginPresent(dto.getLogin());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean killRep(int repId){
         boolean exists = repo.existsById(repId);
         repo.deleteById(repId);
         return exists;
     }
 
-    public boolean authenticateRep(@Valid RepresentativeAuthDTO dto){
-        Representative rep = repo.findByLogin(dto.getLogin()).orElse(null);
-        return( rep != null && rep.getPassword().equals(BCrypt.hashpw(dto.getPassword(),rep.getSalt())));
-    }
-
-    public boolean loginPresent(String login){
+    private boolean loginPresent(String login){
         Representative rep = repo.findByLogin(login).orElse(null);
         return rep!=null;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean addEP(String repLogin, String EPId) {
 
         Representative rep = repo.findByLogin(repLogin).orElse(null);
@@ -63,6 +62,7 @@ public class RepService {
         return true;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean removeEP(String repLogin, String EPId){
         Representative rep = repo.findByLogin(repLogin).orElse(null);
         if (rep==null) return false;

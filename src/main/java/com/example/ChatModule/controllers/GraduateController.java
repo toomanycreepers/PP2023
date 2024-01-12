@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,16 +22,9 @@ public class GraduateController {
     private static final Logger logger = LoggerFactory.getLogger(GraduateController.class);
 
     @GetMapping("/hello")
+    @PreAuthorize("hasRole('GRAD')")
     public String hello(){
-        return "<h1>hello!</h1>";
-    }
-
-    @PostMapping("/auth")
-    public ResponseEntity<HttpStatus> checkPW(@Valid @RequestBody GraduateAuthDTO dto){
-        if(service.authenticateGrad(dto)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return "<h1>hello, grad!!</h1>";
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +37,7 @@ public class GraduateController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(name="/pic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/pic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<HttpStatus> setImage(@RequestPart("content") MultipartFile picture,@RequestParam("graduateId") long graduateId){
         try {
             byte[] content = picture.getBytes();
@@ -58,7 +52,7 @@ public class GraduateController {
         }
     }
 
-    @DeleteMapping(name="/{gradId}/pic")
+    @DeleteMapping(value="/{gradId}/pic")
     public ResponseEntity<HttpStatus> deleteImage(@PathVariable long gradId){
         if (service.deleteImage(gradId)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -66,15 +60,15 @@ public class GraduateController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(name="/{gradId}/pic",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value="/{gradId}/pic",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable long gradId){
         byte[] image = service.getGradImage(gradId);
         if (image==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("PFP").build());
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("PFP.jpeg").build());
         return ResponseEntity.ok().headers(headers).body(image);
     }
 }

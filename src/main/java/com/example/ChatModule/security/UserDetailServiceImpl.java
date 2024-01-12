@@ -1,7 +1,9 @@
 package com.example.ChatModule.security;
 
+import com.example.ChatModule.entities.Admin;
 import com.example.ChatModule.entities.Graduate;
 import com.example.ChatModule.entities.Representative;
+import com.example.ChatModule.repositories.AdminRepository;
 import com.example.ChatModule.repositories.GraduateRepository;
 import com.example.ChatModule.repositories.RepresentativeRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private GraduateRepository gradRepo;
     @Autowired
     private RepresentativeRepository repRepo;
+    @Autowired
+    private AdminRepository adminRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username){
@@ -35,6 +39,18 @@ public class UserDetailServiceImpl implements UserDetailsService {
                     grad.getRoles()
             );
         }
+
+        else if(username.startsWith("admin_")) {
+            Admin admin = adminRepo.findByName(username).orElse(null);
+            if(admin == null) throw new UsernameNotFoundException("User with" + username + " login not found");
+
+            return new org.springframework.security.core.userdetails.User(
+                    admin.getName(),
+                    admin.getPassword(),
+                    admin.getRoles()
+            );
+        }
+
         Representative rep = repRepo.findByLogin(username).orElse(null);
         if(rep == null) throw new UsernameNotFoundException("User with" + username + " login not found");
 

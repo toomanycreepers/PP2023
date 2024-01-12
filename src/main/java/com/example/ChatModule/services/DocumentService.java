@@ -6,6 +6,7 @@ import com.example.ChatModule.repositories.DocumentsRepository;
 import com.example.ChatModule.repositories.GraduateRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class DocumentService {
     private DocumentsRepository repo;
     @Autowired
     private GraduateRepository gradrepo;
+    @PreAuthorize("hasRole('GRAD')")
     public void createDocument(@Valid DocumentDTO dto){
         Document doc = new Document();
         doc.setContent(dto.getContent());
@@ -26,19 +28,20 @@ public class DocumentService {
         repo.save(doc);
     }
 
+    @PreAuthorize("hasRole('GRAD', 'ADMIN')")
     public boolean deleteDocument(long id){
         boolean exists = repo.existsById(id);
         repo.deleteById(id);
         return exists;
     }
-
+    @PreAuthorize("hasRole('GRAD')")
     public DocumentDTO getDocument(long id){
         var doc = repo.findById(id).orElse(null);
         if (doc!=null)
             return new DocumentDTO(doc);
         return null;
     }
-
+    @PreAuthorize("hasRole('GRAD')")
     public List<DocumentDTO> getDocumentsByGraduate(long gradId){
         var docs = repo.findAllByGraduateId(gradId);
         var dtos = new ArrayList<DocumentDTO>();

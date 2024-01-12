@@ -1,5 +1,6 @@
 package com.example.ChatModule.security;
 
+import com.example.ChatModule.DTOs.AdminAuthRegDTO;
 import com.example.ChatModule.DTOs.GraduateAuthDTO;
 import com.example.ChatModule.DTOs.JwtResponse;
 import com.example.ChatModule.DTOs.RepresentativeAuthDTO;
@@ -38,10 +39,22 @@ public class AuthService {
         try {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getPassword()));
         } catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         UserDetails userDetails = userDetailService.loadUserByUsername(dto.getLogin());
+        String token = jwtService.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    public ResponseEntity<JwtResponse> createAdminAuthToken(AdminAuthRegDTO dto) {
+        try {
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getName(), dto.getPassword()));
+        } catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        UserDetails userDetails = userDetailService.loadUserByUsername(dto.getName());
         String token = jwtService.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }

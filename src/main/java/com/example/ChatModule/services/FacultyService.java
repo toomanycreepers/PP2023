@@ -11,6 +11,7 @@ import com.example.ChatModule.repositories.FacultyRepository;
 import com.example.ChatModule.repositories.UniversityRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class FacultyService {
         return new FacultyDTO(fac);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean createFaculty(@Valid FacultyCreationDTO dto){
         var uniOpt = uniRepo.findById(dto.getUniId());
         if (uniOpt.isEmpty()) return false;
@@ -41,6 +43,7 @@ public class FacultyService {
         return true;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean addEP(long facultyId, String EPId) {
         Faculty faculty = repo.findById(facultyId).orElse(null);
         if (faculty==null) return false;
@@ -51,6 +54,7 @@ public class FacultyService {
         return true;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean removeEP(long facultyId, String EPId){
         Faculty faculty = repo.findById(facultyId).orElse(null);
         if (faculty == null) return false;
@@ -72,6 +76,7 @@ public class FacultyService {
         return new FacultyEPDTO(faculty.getName(),epdtos);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean removeFaculty(long facultyId){
         boolean exists = repo.existsById(facultyId);
         repo.deleteById(facultyId);

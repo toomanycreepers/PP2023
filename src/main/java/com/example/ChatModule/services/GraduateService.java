@@ -4,9 +4,11 @@ import com.example.ChatModule.DTOs.GraduateAuthDTO;
 import com.example.ChatModule.DTOs.GraduateRegistrationDTO;
 import com.example.ChatModule.entities.Graduate;
 import com.example.ChatModule.repositories.GraduateRepository;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -35,28 +37,28 @@ public class GraduateService {
         return mailPresent(dto.getMail());
     }
 
-    public boolean authenticateGrad(@Valid GraduateAuthDTO dto){
-        Graduate grad = repo.findByMail(dto.getMail()).orElse(null);
-        return(grad!=null&&grad.getPassword().equals(BCrypt.hashpw(dto.getPassword(),grad.getSalt())));
-    }
-
-    public boolean mailPresent(String mail){
+    private boolean mailPresent(String mail){
         return repo.existsByMail(mail);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean killGrad(long id){
         boolean exists = repo.existsById(id);
         repo.deleteById(id);
         return exists;
     }
 
+    @PreAuthorize("hasRole('GRAD')")
     public boolean uploadImage(long gradId, byte[] image){
         Graduate graduate = repo.findById(gradId).orElse(null);
         if (graduate==null) return false;
         graduate.setPhoto(image);
+        repo.save(graduate);
         return true;
     }
 
+
+    @PreAuthorize("hasAnyRole('GRAD', 'ADMIN')")
     public boolean deleteImage(long gradId){
         Graduate grad = repo.findById(gradId).orElse(null);
         if (grad==null) return false;
