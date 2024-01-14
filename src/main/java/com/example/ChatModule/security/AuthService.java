@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.session.SessionSecurityMarker;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +21,42 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     @Autowired
     private AuthenticationManager authManager;
+//    @Autowired
+//    private AuthenticationManager authManager;
     @Autowired
     private JwtService jwtService;
     @Autowired
     private UserDetailServiceImpl userDetailService;
 
     public ResponseEntity<JwtResponse> createGradAuthToken(GraduateAuthDTO dto) {
+//        UserDetails userDetails = userDetailService.loadUserByUsername(dto.getEmail());
+//        Authentication auth =  new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+////            try {
+////                Authentication authenticate = authManager.authenticate(new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword()));
+////                if (authenticate.isAuthenticated())
+////                    SecurityContextHolder.getContext().setAuthentication(authenticate);}
+//        try{
+//            authManager.authenticate(auth);
+//        }
+//                catch(Exception e){
+//                System.out.print(e);
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//
+//
+//        String token = jwtService.generateToken(userDetails);
+//        return ResponseEntity.ok(new JwtResponse(token));
         try {
-            authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getMail(), dto.getPassword()));
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
         } catch(Exception e){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        UserDetails userDetails = userDetailService.loadUserByUsername(dto.getMail());
+        UserDetails userDetails = userDetailService.loadUserByUsername(dto.getEmail());
         String token = jwtService.generateToken(userDetails);
+        System.out.println(userDetails.getUsername() + " in auth service!");
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
+
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

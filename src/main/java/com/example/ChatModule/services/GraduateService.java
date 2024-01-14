@@ -1,6 +1,7 @@
 package com.example.ChatModule.services;
 
 import com.example.ChatModule.DTOs.GraduateAuthDTO;
+import com.example.ChatModule.DTOs.GraduateDTO;
 import com.example.ChatModule.DTOs.GraduateRegistrationDTO;
 import com.example.ChatModule.entities.Graduate;
 import com.example.ChatModule.repositories.GraduateRepository;
@@ -72,5 +73,11 @@ public class GraduateService {
         Graduate grad = repo.findById(gradId).orElse(null);
         if (grad==null) return null;
         return grad.getPhoto();
+    }
+
+    public GraduateDTO getGradDtoByMail(String mail){
+        Graduate grad = repo.findByMail(mail).orElse(null);
+        if(grad == null) return null;
+        return new GraduateDTO(grad);
     }
 }

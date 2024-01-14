@@ -1,6 +1,7 @@
 package com.example.ChatModule.services;
 
 import com.example.ChatModule.DTOs.DocumentDTO;
+import com.example.ChatModule.DTOs.DocumentLinkDTO;
 import com.example.ChatModule.entities.Document;
 import com.example.ChatModule.repositories.DocumentsRepository;
 import com.example.ChatModule.repositories.GraduateRepository;
@@ -42,12 +43,13 @@ public class DocumentService {
         return null;
     }
     @PreAuthorize("hasRole('GRAD')")
-    public List<DocumentDTO> getDocumentsByGraduate(long gradId){
+    public List<DocumentLinkDTO> getDocumentsByGraduate(long gradId){
         var docs = repo.findAllByGraduateId(gradId);
-        var dtos = new ArrayList<DocumentDTO>();
+        var dtos = new ArrayList<DocumentLinkDTO>();
+
         for (int i=0;i<docs.toArray().length;i++){
-            Document program = docs.get(i);
-            dtos.add(new DocumentDTO(program));
+            Document doc = docs.get(i);
+            dtos.add(new DocumentLinkDTO(doc));
         }
         return dtos;
     }

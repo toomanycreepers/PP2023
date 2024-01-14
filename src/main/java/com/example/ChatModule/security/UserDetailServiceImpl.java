@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private RepresentativeRepository repRepo;
     @Autowired
     private AdminRepository adminRepo;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String username){
@@ -50,14 +53,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
                     admin.getRoles()
             );
         }
+        else {
+            Representative rep = repRepo.findByLogin(username).orElse(null);
+            if (rep == null) throw new UsernameNotFoundException("User with" + username + " login not found");
 
-        Representative rep = repRepo.findByLogin(username).orElse(null);
-        if(rep == null) throw new UsernameNotFoundException("User with" + username + " login not found");
-
-        return new org.springframework.security.core.userdetails.User(
-                rep.getLogin(),
-                rep.getPassword(),
-                rep.getRoles()
-        );
+            return new org.springframework.security.core.userdetails.User(
+                    rep.getLogin(),
+                    rep.getPassword(),
+                    rep.getRoles()
+            );
+        }
     }
 }

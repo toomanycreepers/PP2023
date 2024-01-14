@@ -8,6 +8,7 @@ import com.example.ChatModule.services.AdminService;
 import com.example.ChatModule.services.GraduateService;
 import com.example.ChatModule.services.RepService;
 import jakarta.validation.Valid;
+//import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -15,10 +16,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.Principal;
 
 @RestController
 public class AuthController {
@@ -63,9 +71,15 @@ public class AuthController {
     public ResponseEntity<?> createRepAuthToken(@RequestBody RepresentativeAuthDTO dto) {
         return authService.createRepAuthToken(dto);
     }
+
     @PostMapping("/auth/grad")
-    public ResponseEntity<?> createGradAuthToken(@RequestBody GraduateAuthDTO dto) {
-        return authService.createGradAuthToken(dto);
+    public String createGradAuthToken(@RequestParam String login, @RequestParam String password) {
+//        ResponseEntity<JwtResponse> token = authService.createGradAuthToken(dto);
+//        RedirectView redirectView = new RedirectView();
+//        redirectView.setUrl("/grad_lk");
+//        return redirectView;
+        authService.createGradAuthToken(new GraduateAuthDTO(login, password));
+        return "/grad_lk";
     }
 
     @PostMapping("/auth/admin")
@@ -73,22 +87,19 @@ public class AuthController {
         return authService.createAdminAuthToken(dto);
     }
 
-    @GetMapping("/sign")
-    @ResponseBody
-    public ResponseEntity<?> getSignPage() throws IOException {
-        Resource resource = new ClassPathResource("static/reg_auth.html");
-        String htmlContent = new String(Files.readAllBytes(resource.getFile().toPath()));
-        return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(htmlContent);
-    }
-
-//    @GetMapping("/logout")
-//    public ResponseEntity<?> logOut(){
-//        logoutService.logout();
-//    }
-
     @GetMapping("/admin/hello")
     @PreAuthorize("hasRole('ADMIN')")
     public String hello(){
         return "<h1>hello, admin!</h1>";
+    }
+
+    /**
+     * <p>geting username from security context</p>
+     *
+     * @return username
+     */
+    @GetMapping("/context")
+    public String getContext(){
+        return String.format(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

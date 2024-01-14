@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <!--  <link rel="stylesheet" href="globals.css" />-->
+    <link rel="stylesheet" th:href="@{/styles/reg_auth.css}">
+</head>
+<body>
+<div class="slide">
+    <div class="reg">
+        <div class="frame">
+            <div class="div">
+                <div class="text-wrapper">Вход</div>
+
+                <form class="frame-4" action="/auth/grad" method="post" enctype="multipart/form-data">
+
+                    <div class="frame-5">
+                        <input class="mail-input input" id="login" type="email" placeholder="E-mail" required
+                               name="login">
+                    </div>
+                    <div class="frame-5">
+                        <input class="mail-input input password-input" id="password" type="password"
+                               placeholder="Password" required maxlength="32" minlength="8" name="password">
+                    </div>
+            </div>
+            <div class="frame-2">
+                <a class="sign-up-btn sub-btn href" href="URL">Регистрация</a>
+                <button class="sign-in-btn sub-btn" type="submit">Войти</button>
+            </div>
+            <!--       <div class="frame-7 btn"><div class="text-wrapper-4">Зарегистрироваться</div></div> -->
+            </form>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="frame-8">
+            <div class="text-wrapper-5">Кампус</div>
+            <p class="text-wrapper-6">Екатеринбург — студенческая<br/>столица в России!</p>
+            <div class="text-wrapper-6">Подпишись на наши соцсети</div>
+        </div>
+        <div class="frame-9">
+            <div class="rectangle-wrapper">
+                <div class="rectangle"></div>
+            </div>
+            <div class="frame-wrapper">
+                <div class="frame-10">
+                    <div class="frame-11">
+                        <div class="text-wrapper-7">Новости</div>
+                        <div class="text-wrapper-8">Партнеры</div>
+                        <div class="text-wrapper-8">Мероприятия</div>
+                        <div class="text-wrapper-8">Контакты</div>
+                    </div>
+                    <div class="frame-12">
+                        <div class="text-wrapper-9">Политика конфиденциальности</div>
+                        <p class="text-wrapper-10">Согласие на обработку персональных данных</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<!--  <script>-->
+<!--  const username = document.querySelector(".mail-input")-->
+<!--  const password = document.querySelector(".password-input")-->
+<!--    fetch("/auth/grad", {-->
+<!--      maethod: "post",-->
+<!--      body: JSON.stringify({-->
+<!--        email: username,-->
+<!--        password: password-->
+<!--      })-->
+<!--    })-->
+<!--  </script>-->
+<script>
+    // Ваш JavaScript-скрипт для сохранения токена после успешной аутентификации
+    var authToken = ${authToken};
+    localStorage.setItem('authToken', authToken);
+</script>
+</body>
+</html>

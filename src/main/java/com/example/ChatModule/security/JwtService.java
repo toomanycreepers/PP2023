@@ -23,7 +23,7 @@ public class JwtService {
     @Value("${jwt.lifetime}")
     private Duration jwtLifetime;
 
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)

@@ -2,27 +2,20 @@ package com.example.ChatModule.configs;
 
 import com.example.ChatModule.security.LogoutService;
 import com.example.ChatModule.security.UserDetailServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -36,6 +29,8 @@ public class SecurityConfig {
     private JwtRequestFilter jwtRequestFilter;
     @Autowired
     private LogoutService logoutService;
+//    @Autowired
+//    private AuthenticationManagerImpl authManager;
     @Bean
     public SecurityFilterChain filterchian(HttpSecurity http) throws Exception{
         http
@@ -43,12 +38,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
 
-//                .formLogin(httpSecurityFormLoginConfigurer ->
-//                        httpSecurityFormLoginConfigurer.loginPage("/sign").permitAll())
+//                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+//                        .loginPage("/sign").permitAll())
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register/**").anonymous()
                         .requestMatchers("/auth/**").anonymous()
+                        .requestMatchers("/sign").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/grad_lk").authenticated()
                         .requestMatchers("/grad/**").authenticated()
                         .requestMatchers("/rep/**").authenticated()
                         .requestMatchers("/doc/**").authenticated()
@@ -56,12 +53,16 @@ public class SecurityConfig {
                         .requestMatchers("/faculty/**").authenticated()
                         .requestMatchers("/university/**").authenticated()
                         .anyRequest().permitAll()
+
                 )
+                //.authenticationProvider(daoAuthenticationProvider())
 
 //                .exceptionHandling(exceptionHandling -> exceptionHandling
 //                        .authenticationEntryPoint((request, response, authException) ->
 //                                response.sendRedirect("/sign"))
 //                )
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 
@@ -69,9 +70,8 @@ public class SecurityConfig {
                         logout
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/sign")
+                                .logoutSuccessUrl("/sign")
                 );
 
         return http.build();
@@ -83,15 +83,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(userDetailService);
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }

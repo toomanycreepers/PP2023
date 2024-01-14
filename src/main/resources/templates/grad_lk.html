@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en/ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/styles/grad_lk.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="angle-wrapper">
+        <svg width="400" height="110" viewBox="0 0 400 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0V110H399.5C382.059 110 365.996 96.8549 357.567 75.6834L341.097 34.3167C332.668 13.1451 316.605 0 299.164 0H0Z" fill="#F42E30"/>
+        </svg>
+    </div>
+    <header class="header">
+        <nav>
+            <div class="option-wrapper">
+                <button class="news-btn header-btn">Новости</button>
+                <button class="event-btn header-btn">Мероприятия</button>
+                <button class="colab-btn header-btn">Партнеры</button>
+                <button class="more-btn header-btn">Еще</button>
+                <div class="img-circle-wrapper">
+
+                </div>
+                <button class="logout-btn">Выйти</button>
+            </div>
+        </nav>
+    </header>
+    <div class="page-name-wrapper">
+        <h1 class="page-name">Личный кабинет</h1>
+    </div>
+    <main>
+        <div class="personal-info">
+            <p class="main-name main-info"><span th:text=${grad.getLastname()}></span></p>
+            <p class="main-secondname main-info"><span th:text=${grad.getFirstname()}></span></p>
+            <p class="main-otc main-info"><span th:text=${grad.getPatronimic()}></span></p>
+
+            <p class="sub-info">
+                <span th:text=${grad.getGradFrom()}></span>
+                <span> | </span>
+                <span th:text=${grad.getRegion()}></span>
+                <span> | </span>
+                <span th:text=${grad.getDateOfBirth()}></span>
+            </p>
+        </div>
+        <div class="photo_wrapper">
+            <img th:src="@{'/grad/' + ${grad.getId()} + '/pic'}" alt="">
+        </div>
+    </main>
+    <div class="info-block">
+        <h2 class="info-block-header">Основные данные</h2>
+        <div class="tables-wrapper">
+            <div class="file-block table">
+                <div class="table-block-name">
+                    <p class="table-block-name-p">Документы</p>
+                </div>
+                <div class="table-body files-table" >
+                    <!-- Это для наглядности накакано -->
+                    <div class="table-elem" th:each="document:${gradDocLinks}" >
+                        <a target="_blank" style="
+                                font-family:  Inter, sans-serif;
+                                font-weight: 900;
+                                font-size: 22px;
+                                color: black;
+                                text-decoration: none;
+
+                                "th:href="${document.getLink()}">
+                            <span th:text="${document.getName()}" style = "padding-left: 20px; line-height: 60px;"></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="institute-block table">
+                <div class="table-block-name">
+                    <p class="table-block-name-p">Желаемые специальности</p>
+                </div>
+                <div class="table-body">
+                    <!-- Хрень с вузами и специальностью -->
+                </div>
+            </div>
+            <div class="tracker-block table">
+                <div class="table-block-name">
+                    <p class="table-block-name-p">Трекер</p>
+                </div>
+                <div class="table-body">
+                    <!-- Хрень не помню с чем -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="shit1">
+            <a href="">Кампус</a>
+            <a href="">Екатеринбург — студенческая столица в России!</a>
+            <a href="">Подпишись на наши соцсети</a>
+        </div>
+        <div class="shit2">
+            <div class="what-is-this"></div>
+            <div class="shit-2-par-wrapper">
+                <div class="shit-2-par">
+                    <a class="tipa-ne-ref" href="">Новости</a>
+                    <a class="tipa-ne-ref" href="">Партнеры</a>
+                    <a class="tipa-ne-ref" href="">Мероприятия</a>
+                    <a class="tipa-ne-ref" href="">Контакты</a>
+                </div>
+                <div class="shit-2-par">
+                    <a class="tipa-ref" href="">Политика конфиденциальности</a>
+                    <a class="tipa-ref tipa-ref-2" href="">Согласие на обработку персональных данных</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script>
+    const logoutButton = document.querySelector(".logout-btn");
+
+    logoutButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        fetch("/logout").then(response => response.json()).then(data => console.log(data)).catch(error => console.error("error", error))
+        console.log("im working!")
+    })
+</script>
+</body>
+</html>
