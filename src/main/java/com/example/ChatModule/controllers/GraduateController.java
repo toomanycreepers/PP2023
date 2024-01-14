@@ -51,8 +51,9 @@ public class GraduateController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(name="/pic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<HttpStatus> setImage(@RequestPart("content") MultipartFile picture,@RequestParam("graduateId") long graduateId){
+    @PostMapping(value="/pic",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<HttpStatus> setImage(@RequestPart("content") MultipartFile picture,
+                                               @RequestParam("graduateId") long graduateId){
         try {
             byte[] content = picture.getBytes();
             if (service.uploadImage(graduateId,content)) {
@@ -66,7 +67,7 @@ public class GraduateController {
         }
     }
 
-    @DeleteMapping(name="/{gradId}/pic")
+    @DeleteMapping(value="/{gradId}/pic")
     public ResponseEntity<HttpStatus> deleteImage(@PathVariable long gradId){
         if (service.deleteImage(gradId)){
             return new ResponseEntity<>(HttpStatus.OK);
@@ -74,15 +75,15 @@ public class GraduateController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(name="/{gradId}/pic",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value="/{gradId}/pic",produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable long gradId){
         byte[] image = service.getGradImage(gradId);
         if (image==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("PFP").build());
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename("PFP.jpeg").build());
         return ResponseEntity.ok().headers(headers).body(image);
     }
 }

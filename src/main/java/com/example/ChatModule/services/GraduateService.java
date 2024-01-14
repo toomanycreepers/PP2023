@@ -54,6 +54,7 @@ public class GraduateService {
         Graduate graduate = repo.findById(gradId).orElse(null);
         if (graduate==null) return false;
         graduate.setPhoto(image);
+        repo.save(graduate);
         return true;
     }
 

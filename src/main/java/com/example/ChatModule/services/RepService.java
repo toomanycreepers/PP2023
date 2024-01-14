@@ -2,6 +2,7 @@ package com.example.ChatModule.services;
 
 import com.example.ChatModule.DTOs.RepresentativeAuthDTO;
 import com.example.ChatModule.DTOs.RepresentativeRegistrationDTO;
+import com.example.ChatModule.entities.Chat;
 import com.example.ChatModule.entities.Faculty;
 import com.example.ChatModule.entities.Representative;
 import com.example.ChatModule.repositories.EduProgramRepository;
@@ -11,6 +12,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -36,7 +39,7 @@ public class RepService {
         return loginPresent(dto.getLogin());
     }
 
-    public boolean killRep(int repId){
+    public boolean killRep(long repId){
         boolean exists = repo.existsById(repId);
         repo.deleteById(repId);
         return exists;
@@ -72,5 +75,4 @@ public class RepService {
         repo.save(rep);
         return true;
     }
-
 }
