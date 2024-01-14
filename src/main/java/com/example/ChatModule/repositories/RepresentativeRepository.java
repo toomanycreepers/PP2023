@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RepresentativeRepository extends JpaRepository<Representative, Integer> {
+public interface RepresentativeRepository extends JpaRepository<Representative, Long> {
     Optional<Representative> findByLogin(String login);
 }

@@ -14,12 +14,12 @@ import lombok.*;
 public class GraduateAuthDTO {
     @NotBlank
     @Email
-    String mail;
+    String email;
     @NotBlank
     String password;
 
     public GraduateAuthDTO(Graduate grad){
-        this.mail=grad.getMail();
+        this.email=grad.getMail();
         this.password = grad.getPassword();
     }
 }

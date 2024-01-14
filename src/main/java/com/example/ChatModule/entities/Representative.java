@@ -2,10 +2,12 @@ package com.example.ChatModule.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Representatives")
@@ -41,6 +43,8 @@ public class Representative {
     private List<EduProgram> eduPrograms;
     @Column(name="salt")
     private String salt;
+    @Transient
+    private List<Role> role = new ArrayList<Role>();
 
     private void generateSalt(){
         if (this.salt==null)
@@ -50,6 +54,11 @@ public class Representative {
         generateSalt();
         password=BCrypt.hashpw(password,salt);
         this.password=password;
+    }
+
+    public List<Role> getRoles(){
+        role.add(new Role("ROLE_REP")) ;
+        return role;
     }
 
     public void addEP(EduProgram ep){

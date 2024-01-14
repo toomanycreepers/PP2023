@@ -1,11 +1,16 @@
 package com.example.ChatModule.entities;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Класс, представляющий абитуриента.
@@ -50,7 +55,10 @@ public class Graduate {
     private String region;
     @Column(name="salt")
     private String salt;
-
+//    @Transient
+//    private List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+    @Transient
+    private List<Role> role = new ArrayList<Role>();
     private void generateSalt(){
         if (this.salt==null)
             this.salt=BCrypt.gensalt();
@@ -59,5 +67,10 @@ public class Graduate {
         generateSalt();
         password=BCrypt.hashpw(password,salt);
         this.password=password;
+    }
+
+    public List<Role> getRoles(){
+        role.add(new Role("ROLE_GRAD")) ;
+       return role;
     }
 }

@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,24 +23,9 @@ public class GraduateController {
     private static final Logger logger = LoggerFactory.getLogger(GraduateController.class);
 
     @GetMapping("/hello")
+    @PreAuthorize("hasRole('GRAD')")
     public String hello(){
-        return "<h1>hello!</h1>";
-    }
-
-    @PostMapping("/auth")
-    public ResponseEntity<HttpStatus> checkPW(@Valid @RequestBody GraduateAuthDTO dto){
-        if(service.authenticateGrad(dto)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<HttpStatus> registerGrad(@Valid @RequestBody GraduateRegistrationDTO dto){
-            if (service.registerGraduate(dto)){
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     @DeleteMapping("/{id}")

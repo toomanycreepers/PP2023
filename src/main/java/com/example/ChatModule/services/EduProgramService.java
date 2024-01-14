@@ -5,6 +5,7 @@ import com.example.ChatModule.entities.EduProgram;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.ChatModule.repositories.EduProgramRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class EduProgramService {
     @Autowired
     private EduProgramRepository repository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean createEduProgram(@Valid EduProgramDTO dto){
         if (repository.existsById(dto.getId())) {
             return false;
@@ -47,6 +49,7 @@ public class EduProgramService {
         else return null;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean updateEduProgram(@Valid EduProgramDTO dto){
         var EPToUpdate = repository.findById(dto.getId()).orElse(null);
 
@@ -60,6 +63,7 @@ public class EduProgramService {
         return false;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean deleteEduProgram(String id){
         boolean exists = repository.existsById(id);
         repository.deleteById(id);
